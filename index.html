@@ -26,7 +26,7 @@ nav button{flex:1}nav .on{background:var(--ac);color:#fff;border-color:var(--ac)
 th,td{padding:8px 6px;border-bottom:1px solid var(--bd);text-align:left;vertical-align:top}
 td small{color:var(--mut)}select{font:inherit;background:var(--card);color:var(--fg);border:1px solid var(--bd);border-radius:8px;padding:6px;margin:0 6px 10px 0}
 .cr{position:absolute;right:8px;bottom:6px;font-size:11px;color:#fff;background:rgba(0,0,0,.55);padding:2px 6px;border-radius:6px;text-decoration:none}input{font:inherit;background:var(--card);color:var(--fg);border:1px solid var(--bd);border-radius:8px;padding:8px;width:60%}</style></head><body><main>
-<nav><button id="t1" onclick="go('s')">Swipen</button><button id="t2" onclick="go('r')">Resultaten</button></nav>
+<nav><button id="t1" onclick="go('s')">Swipen</button><button id="t2" onclick="go('r')">Resultaten</button><button id="t3" onclick="go('b')">Bladeren</button></nav>
 <div id="app"></div></main>
 <script>
 const RAW=`Seoul|A|🏯|Gyeongbokgung-paleis|Grootste paleis van Seoul. Huur een hanbok (dan gratis toegang) en zie de wisseling van de wacht.|4.6|Prachtig en fotogeniek; ga vroeg voor de drukte.|47408
@@ -103,30 +103,40 @@ function swipe(){
  const bar=`<div class="pg"><i style="width:${done/I.length*100}%"></i></div><p class="m">${done} / ${I.length} beoordeeld</p>`;
  const ub=`<button class="u" onclick="undo()" ${hist.length?'':'disabled'}>↩ Terug</button>`;
  if(!it)return bar+`<div class="card"><div class="b"><h2>Klaar! 🎉</h2><p>Alles is beoordeeld. Open het tabblad Resultaten om te plannen.</p></div></div><p>${ub}</p>`;
- const k=enc(it.nm+' '+it.c);
- return bar+`<div class="card"><div class="ph" id="ph" style="background:${G[it.t]}">${it.e}</div><div class="b"><div class="tag">${it.t=='A'?'Activiteit':'Restaurant'} · ${it.r?`★ ${it.r} Google <small>(${(+it.k).toLocaleString('nl-BE')} reviews, 23 nov 2026)</small>`:'<small>Geen Google-score</small>'}</div><h2>${esc(it.nm)}</h2><p>${esc(it.d)}</p><p class="s"><b>Bezoekers zeggen:</b> ${esc(it.s)}</p><div class="lk"><a target="_blank" rel="noopener" href="https://www.google.com/search?tbm=isch&q=${k}">📷 Foto’s</a><a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${k}">📍 Google Maps</a></div></div></div>`+
+ return bar+cardH(it,false)+
  `<div class="btns">${E.map((e,s)=>`<button onclick="rate(${s})"><b>${e}</b>${L[s]}</button>`).join('')}</div>${ub}`;
 }
+function cardH(it,city){const k=enc(it.nm+' '+it.c),sc=city&&it.n in mine?' · jij: '+E[mine[it.n]]:'';
+ return `<div class="card"><div class="ph" id="ph" style="background:${G[it.t]}">${it.e}</div><div class="b"><div class="tag">${city?it.c+' · ':''}${it.t=='A'?'Activiteit':'Restaurant'} · ${it.r?`★ ${it.r} Google <small>(${(+it.k).toLocaleString('nl-BE')} reviews, 23 nov 2026)</small>`:'<small>Geen Google-score</small>'}${sc}</div><h2>${esc(it.nm)}</h2><p>${esc(it.d)}</p><p class="s"><b>Bezoekers zeggen:</b> ${esc(it.s)}</p><div class="lk"><a target="_blank" rel="noopener" href="https://www.google.com/search?tbm=isch&q=${k}">📷 Foto’s</a><a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${k}">📍 Google Maps</a></div></div></div>`}
+let bi=0,bc='',bt='',shown=null,myName='';try{myName=localStorage.getItem('kjn')||''}catch(e){}
+function list(){return I.filter(i=>(!bc||i.c==bc)&&(!bt||i.t==bt))}
+function nav(d){const n=list().length;if(n){bi=(bi+d+n)%n;render()}}
+function setB(){bc=$('#bc').value;bt=$('#bt').value;bi=0;render()}
+function browse(){const l=list();if(bi>=l.length)bi=0;const it=l[bi];shown=it;const cs=[...new Set(I.map(i=>i.c))];
+ const sel=`<select id="bc" onchange="setB()"><option value="">Alle steden</option>${cs.map(c=>`<option ${c==bc?'selected':''}>${c}</option>`).join('')}</select><select id="bt" onchange="setB()"><option value="">Alles</option><option value="A" ${bt=='A'?'selected':''}>Activiteiten</option><option value="R" ${bt=='R'?'selected':''}>Restaurants</option></select>`;
+ if(!it)return sel+'<p class="m">Geen items.</p>';
+ return sel+`<p class="m">${bi+1} / ${l.length} · alleen bekijken, niets wordt beoordeeld</p>`+cardH(it,true)+`<div class="btns" style="grid-template-columns:1fr 1fr"><button onclick="nav(-1)">← Vorige</button><button onclick="nav(1)">Volgende →</button></div>`}
 function rows(){const ids=Object.keys(others);
  return{ids,r:I.filter(i=>(i.n in mine||ids.some(u=>i.n in others[u]))&&(!fc||i.c==fc)&&(!ft||i.t==ft)).map(i=>{const sc=[mine[i.n],...ids.map(u=>others[u][i.n])];return{i,sc,tot:sc.reduce((a,b)=>a+(b??0),0)}}).sort((a,b)=>b.tot-a.tot||b.i.r-a.i.r)}}
 function res(){const{ids,r}=rows();const cs=[...new Set(I.map(i=>i.c))];
  const sel=`<select id="fc" onchange="setF()"><option value="">Alle steden</option>${cs.map(c=>`<option ${c==fc?'selected':''}>${c}</option>`).join('')}</select><select id="ft" onchange="setF()"><option value="">Alles</option><option value="A" ${ft=='A'?'selected':''}>Activiteiten</option><option value="R" ${ft=='R'?'selected':''}>Restaurants</option></select><button class="dl" onclick="dl()">⬇ CSV</button>`;
- const h=`<th>Item</th><th>Jij</th>${ids.map(u=>`<th>${esc((names[u]&&names[u].name)||'Partner')}</th>`).join('')}<th>Totaal</th>`;
+ const h=`<th>Item</th><th>${esc(myName||'Jij')}</th>${ids.map(u=>`<th>${esc((names[u]&&names[u].name)||'Partner')}</th>`).join('')}<th>Totaal</th>`;
  const b=r.map(({i,sc,tot})=>`<tr><td>${i.e} <b>${esc(i.nm)}</b><br><small>${i.c} · ${i.t=='A'?'Activiteit':'Restaurant'} · ${i.r?'★'+i.r:'–'}</small></td>${sc.map(s=>`<td>${s==null?'–':E[s]}</td>`).join('')}<td><b>${tot}</b></td></tr>`).join('');
- return sel+`<p class="m">Jouw code: <b id="cc">${code()}</b> <button class="dl" onclick="cp()">Kopieer</button></p><p><input id="pc" placeholder="Plak de code van je partner"> <button class="dl" onclick="setP()">OK</button></p>`+`<div class="tw"><table><tr>${h}</tr>${b||'<tr><td colspan="9">Nog niets beoordeeld.</td></tr>'}</table></div>`}
+ return sel+`<p class="m">Jouw naam: <input id="nm" value="${esc(myName)}" onchange="setN()" style="width:45%"></p><p class="m">Jouw code: <b id="cc">${code()}</b> <button class="dl" onclick="cp()">Kopieer</button></p><p><input id="pc" placeholder="Plak de code van je partner"> <button class="dl" onclick="setP()">OK</button></p>`+`<div class="tw"><table><tr>${h}</tr>${b||'<tr><td colspan="9">Nog niets beoordeeld.</td></tr>'}</table></div>`}
 async function dl(){const{ids,r}=rows();
  const csv=['stad,type,naam,google,jij'+ids.map((u,k)=>',partner'+(k+1)).join('')+',totaal',...r.map(({i,sc,tot})=>[i.c,i.t=='A'?'activiteit':'restaurant','"'+i.nm+'"',i.r,...sc.map(s=>s==null?'':L[s]),tot].join(','))].join('\n');
  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='korea-japan-scores.csv';a.click()}
 const W={0:'Gyeongbokgung',1:'Bukchon_Hanok_Village',2:'N_Seoul_Tower',4:'Korean_Demilitarized_Zone',5:'Banpo_Bridge',6:'Lotte_World_Tower',7:'Gwangjang_Market',11:'Gamcheon_Culture_Village',12:'Haedong_Yonggungsa',13:'Gwangalli_Beach',14:'Jagalchi_Market',16:'Hiroshima_Peace_Memorial_Museum',17:'Itsukushima_Shrine',20:'Fushimi_Inari-taisha',21:'Arashiyama',22:'Kiyomizu-dera',23:'Kinkaku-ji',24:'Gion,_Kyoto',25:'Tōdai-ji',26:'Nishiki_Market',29:'Dōtonbori',30:'Osaka_Castle',31:'Universal_Studios_Japan',32:'Himeji_Castle',33:'Takoyaki',34:'Okonomiyaki',35:'Kushikatsu',36:'Sensō-ji',37:'Meiji_Shrine',38:'Shibuya_Scramble_Square',39:'TeamLab_Planets',40:'Ghibli_Museum',41:'Golden_Gai',42:'Chureito_Pagoda',43:'Tsukiji_fish_market',44:'Sushi',45:'Tsukemen',46:'Tonkatsu',47:'Okinawa_Churaumi_Aquarium',48:'Kerama_Islands',49:'Cape_Manzamo',50:'Shuri_Castle',51:'Okinawa_soba'};
 const PC={};
 async function photo(it){const t=W[it.n];if(!t)return;try{let j=PC[t];if(!j){const r=await fetch('https://en.wikipedia.org/api/rest_v1/page/summary/'+encodeURIComponent(t));if(!r.ok)return;j=PC[t]=await r.json()}
- const s=j.thumbnail&&j.thumbnail.source;const el=$('#ph');if(!s||!el||cur()!==it)return;
+ const s=j.thumbnail&&j.thumbnail.source;const el=$('#ph');if(!s||!el||shown!==it)return;
  el.innerHTML='<img src="'+s.replace(/\/\d+px-/,'/960px-')+'" alt="" style="width:100%;height:100%;object-fit:cover" onerror="this.remove()"><a class="cr" target="_blank" rel="noopener" href="'+j.content_urls.desktop.page+'">Foto: Wikipedia</a>'}catch(e){}}
-function code(){return I.map(i=>i.n in mine?mine[i.n]:'-').join('')}
+function code(){return (myName?myName.replace(/~/g,'')+'~':'')+I.map(i=>i.n in mine?mine[i.n]:'-').join('')}
+function setN(){myName=$('#nm').value.trim();try{localStorage.setItem('kjn',myName)}catch(e){}$('#cc').textContent=code()}
 function cp(){const c=code();try{navigator.clipboard.writeText(c)}catch(e){}$('#cc').textContent=c}
-function setP(){const v=$('#pc').value.trim();if(v.length==I.length&&/^[0-3-]+$/.test(v)){try{localStorage.setItem('kjp',v)}catch(e){}loadP();render()}else alert('Ongeldige code')}
-function loadP(){let v='';try{v=localStorage.getItem('kjp')||''}catch(e){}if(v.length==I.length){const o={};[...v].forEach((c,n)=>{if(c!='-')o[n]=+c});others={p:o};names={p:{name:'Partner'}}}}
-function render(){$('#t1').className=view=='s'?'on':'';$('#t2').className=view=='r'?'on':'';$('#app').innerHTML=view=='s'?swipe():res();if(view=='s'){const it=cur();if(it){photo(it);const nx=q.filter(i=>!(i.n in mine))[1];if(nx&&W[nx.n])fetch('https://en.wikipedia.org/api/rest_v1/page/summary/'+encodeURIComponent(W[nx.n])).then(r=>r.ok?r.json():0).then(j=>{if(j)PC[W[nx.n]]=j}).catch(()=>{})}}}
+function setP(){const raw=$('#pc').value.trim(),i=raw.lastIndexOf('~'),v=raw.slice(i+1),nm=i>0?raw.slice(0,i):'';if(v.length==I.length&&/^[0-3-]+$/.test(v)){try{localStorage.setItem('kjp',v);localStorage.setItem('kjpn',nm)}catch(e){}loadP();render()}else alert('Ongeldige code')}
+function loadP(){let v='',nm='';try{v=localStorage.getItem('kjp')||'';nm=localStorage.getItem('kjpn')||''}catch(e){}if(v.length==I.length){const o={};[...v].forEach((c,n)=>{if(c!='-')o[n]=+c});others={p:o};names={p:{name:nm||'Partner'}}}}
+function render(){$('#t1').className=view=='s'?'on':'';$('#t2').className=view=='r'?'on':'';$('#t3').className=view=='b'?'on':'';$('#app').innerHTML=view=='s'?swipe():view=='b'?browse():res();if(view!='r'){const it=view=='s'?cur():shown;if(it){shown=it;photo(it);const nx=q.filter(i=>!(i.n in mine))[1];if(nx&&W[nx.n])fetch('https://en.wikipedia.org/api/rest_v1/page/summary/'+encodeURIComponent(W[nx.n])).then(r=>r.ok?r.json():0).then(j=>{if(j)PC[W[nx.n]]=j}).catch(()=>{})}}}
 loadP();render();
-document.addEventListener('keydown',e=>{if(view=='s'&&e.key>='1'&&e.key<='4')rate(+e.key-1)});
+document.addEventListener('keydown',e=>{if(view=='s'&&e.key>='1'&&e.key<='4')rate(+e.key-1);if(view=='b'){if(e.key=='ArrowRight')nav(1);if(e.key=='ArrowLeft')nav(-1)}});
 </script></body></html>
