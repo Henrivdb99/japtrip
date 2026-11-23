@@ -25,118 +25,102 @@ nav button{flex:1}nav .on{background:var(--ac);color:#fff;border-color:var(--ac)
 .tw{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:14px}
 th,td{padding:8px 6px;border-bottom:1px solid var(--bd);text-align:left;vertical-align:top}
 td small{color:var(--mut)}select{font:inherit;background:var(--card);color:var(--fg);border:1px solid var(--bd);border-radius:8px;padding:6px;margin:0 6px 10px 0}
-.cr{position:absolute;right:8px;bottom:6px;font-size:11px;color:#fff;background:rgba(0,0,0,.55);padding:2px 6px;border-radius:6px;text-decoration:none}input{font:inherit;background:var(--card);color:var(--fg);border:1px solid var(--bd);border-radius:8px;padding:8px;width:60%}</style></head><body><main>
-<nav><button id="t1" onclick="go('s')">Swipen</button><button id="t2" onclick="go('r')">Resultaten</button><button id="t3" onclick="go('b')">Bladeren</button></nav>
+.cr{position:absolute;right:8px;bottom:6px;font-size:11px;color:#fff;background:rgba(0,0,0,.55);padding:2px 6px;border-radius:6px;text-decoration:none}input{font:inherit;background:var(--card);color:var(--fg);border:1px solid var(--bd);border-radius:8px;padding:8px;width:60%}.btns button.on{outline:2px solid var(--ac)}.who{display:flex;gap:8px;margin-bottom:12px}.who button{flex:1;font:inherit;border:1px solid var(--bd);background:var(--card);color:var(--fg);border-radius:12px;padding:8px;cursor:pointer}.who .on{background:var(--fg);color:var(--bg)}.v{font-size:14px}</style></head><body><main>
+<div class="who"><button id="wA" onclick="setWho('A')">Annelies</button><button id="wH" onclick="setWho('H')">Henri</button></div>
+<nav><button id="ta" onclick="go('a')">Activiteiten</button><button id="tr" onclick="go('r')">Restaurants</button><button id="tz" onclick="go('z')">Resultaten</button></nav>
 <div id="app"></div></main>
 <script>
-const RAW=`Seoul|A|🏯|Gyeongbokgung-paleis|Grootste paleis van Seoul. Huur een hanbok (dan gratis toegang) en zie de wisseling van de wacht.|4.6|Prachtig en fotogeniek; ga vroeg voor de drukte.|47408
-Seoul|A|🏘️|Bukchon Hanok Village|Heuvelwijk met traditionele Koreaanse huizen en uitzicht over de daken.|4.4|Charmant en fotogeniek, maar druk en heuvelachtig; sommigen vinden het kort.|24969
-Seoul|A|🗼|N Seoul Tower|Toren op Namsan met panorama over de stad, vooral mooi bij zonsondergang.|4.5|Topuitzicht; kabelbaan en rijen kunnen lang zijn.|69098
-Seoul|A|♨️|Dragon Hill Spa (jjimjilbang)|Koreaans badhuis met sauna’s, hete baden en rustzalen, tot laat open.|3.7|Leuk en ontspannend; wennen aan naaktbaden en extra kosten (handdoek, laden).|4603
-Seoul|A|🪖|DMZ-tour|Dagtrip naar de gedemilitariseerde zone: tunnel, uitkijkpost en grensdorp.||Tourscore niet te bepalen (hangt van organisator af); vooraf boeken.|0
-Seoul|A|🌇|Han-rivier picknick (Banpo)|Picknick aan de rivier met bezorgde fried chicken en ramyun uit de gemakswinkel.|4.4|Fijne picknicksfeer; de regenboogfontein draait seizoensgebonden (tot eind oktober).|7993
-Seoul|A|🏙️|Lotte World Tower – Seoul Sky|Observatiedek op de 117e verdieping van een van de hoogste torens ter wereld.|4.6|Spectaculair uitzicht; reserveer een tijdslot.|6718
-Seoul|R|🥘|Gwangjang Market|Streetfoodmarkt met bindaetteok, mayak gimbap en rauwe rundertartaar.|4.2|Levendig en authentiek; weinig variatie en veel varkensvet.|44496
-Seoul|R|🍜|Myeongdong Kyoja|Handgesneden kalguksu-noedels en mandu in een eenvoudige zaak.|4.2|Snel en simpel; meningen verdeeld, sommigen vinden het mild en overhyped.|15110
-Seoul|R|🍲|Tosokchon Samgyetang|Ginseng-kippensoep vlak bij Gyeongbokgung.|4.2|Warm en voedzaam; toeristisch maar consequent goed.|12223
-Seoul|R|🥩|Maple Tree House (Itaewon)|Koreaanse BBQ: galbi en samgyeopsal aan tafel gegrild.|4.3|Goed vlees en service; prijzig voor Korea.|1397
-Busan|A|🎨|Gamcheon Culture Village|Kleurrijk heuveldorp vol street art, soms “Santorini van Korea” genoemd.|4.4|Leuk om te dwalen; drukker in het weekend.|33957
-Busan|A|🌊|Haedong Yonggungsa|Boeddhistische tempel op een klif aan zee.|4.5|Een van de mooiste tempels; ga vroeg.|28304
-Busan|A|🌉|Gwangalli Beach bij avond|Strand met verlicht uitzicht op de Gwangan-brug en terrassen langs het water.|4.7|Gezellige sfeer en mooie lichten.|1783
-Busan|R|🐟|Jagalchi Fish Market|Grootste vismarkt van Korea: kies je vis en eet hem boven ter plekke.|4.0|Beleving, maar let op de prijzen en vraag vooraf.|27622
-Busan|R|🔥|Haeundae Amso Galbijip|Beroemd voor galbi (gemarineerde ribbetjes), gegrild aan tafel.|3.9|Topvlees (Michelin) maar duur; lange wachttijd en daarom lagere score.|3829
-Hiroshima|A|🕊️|Peace Memorial Park & Museum|A-Bomb Dome, vredesmuseum en monument voor de kinderen. Plan 2-3 uur.|4.6|Aangrijpend; kan erg druk zijn met schoolgroepen, ga vroeg of laat.|31509
-Hiroshima|A|⛩️|Miyajima – drijvende torii|Eiland met de torii in zee, herten, tempels en kabelbaan naar Mount Misen.|4.6|Magisch bij hoogwater; combineer met oesters.|37386
-Hiroshima|R|🥞|Okonomimura|Gebouw met vier verdiepingen okonomiyaki-kraampjes (Hiroshima-stijl met noedels).|4.3|Gezellig en lokaal; keuze maken is lastig.|9253
-Hiroshima|R|🦪|Yakigaki no Hayashi (oesters, Miyajima)|Hiroshima is de oesterhoofdstad: vers gegrild of gefrituurd.|4.3|Verse oesters, makkelijk bestellen via tablet; woensdag/donderdag soms dicht.|2110
-Kyoto|A|⛩️|Fushimi Inari-taisha|Duizenden rode torii-poorten langs een bergpad.|4.6|Ga bij zonsopgang of laat in de avond voor rust.|94365
-Kyoto|A|🎋|Arashiyama bamboebos|Bamboepad, Tenryu-ji, apenpark en rivier met bootjes.|4.3|Mooi maar korter en drukker dan verwacht; vroeg gaan.|27080
-Kyoto|A|🏯|Kiyomizu-dera|Houten tempel op een berg met uitzicht en de oude straatjes van Higashiyama.|4.6|Prachtig, vooral in herfst; toeristisch.|74972
-Kyoto|A|✨|Kinkaku-ji (Gouden Paviljoen)|Zenpaviljoen bedekt met bladgoud, weerspiegeld in een vijver.|4.6|Iconisch maar kort en druk; sommigen vinden het vooral een toeristische stop.|72384
-Kyoto|A|👘|Gion avondwandeling|Historisch geishadistrict; kans op maiko in de late namiddag.||Wijk, geen Google-score; sfeervol bij schemering.|0
-Kyoto|A|🦌|Nara – Todai-ji & herten|Dagtrip: Grote Boeddha en tamme herten in het park.|4.7|Leuk en makkelijk te combineren met Kyoto.|32976
-Kyoto|R|🍡|Nishiki Market|Overdekte markt met tamagoyaki, ingelegde groenten en spiesjes.|4.3|Leuk om te proeven; druk, niet overal kun je lopend eten.|55921
-Kyoto|R|🍜|Kyoto Gogyo|Beroemd voor zwartgebrande miso-ramen met rokerige smaak.||Geen betrouwbare Google-score gevonden.|0
-Kyoto|R|🍵|Nakamura Tokichi (Uji)|Matcha-desserts en thee bij de bron in Uji.|4.4|Heerlijke matcha-parfait, maar wachttijd tot 2 uur (QR-wachtrij).|5619
-Osaka|A|🌃|Dotonbori|Neonlichten, Glico-man en eten langs het kanaal.||Wijk, geen Google-score; neon en eten, druk en chaotisch.|0
-Osaka|A|🏯|Osaka Castle|Kasteel met museum en uitzicht, omringd door een park.|4.4|Mooi vanbuiten; binnenin vooral museum.|103452
-Osaka|A|🎢|Universal Studios Japan|Pretpark met Super Nintendo World en Harry Potter.|4.5|Fantastisch maar druk; koop vooraf tickets.|158064
-Osaka|A|🏰|Himeji Castle|“Witte reiger”-kasteel; dagtrip van ca. 45 min met de sneltrein.|4.6|Mooiste kasteel van Japan volgens velen.|61260
-Osaka|R|🐙|Takoyaki (Wanaka/Aizuya)|Knapperige octopusballetjes, uitgevonden in Osaka.|4.2|Goedkoop en heet; wees voorzichtig met de eerste hap.|1754
-Osaka|R|🥞|Okonomiyaki Mizuno|Michelin Bib Gourmand-okonomiyaki in Dotonbori.|3.8|Legendarisch en Michelin-vermeld, maar meningen verdeeld; kleine zaak met rij.|3322
-Osaka|R|🍢|Kushikatsu Daruma (Shinsekai)|Gefrituurde spiesjes; niet twee keer dippen in de saus.|4.1|Gezellig, wat vettig, sfeervol.|2196
-Tokio|A|⛩️|Senso-ji (Asakusa)|Oudste tempel van Tokio met Kaminarimon en winkelstraat.|4.6|Sfeervol, maar druk; mooi ’s avonds.|102093
-Tokio|A|🌲|Meiji Jingu|Rustige schrijn in een bos in het hart van de stad.|4.7|Verfrissend na de drukte.|54976
-Tokio|A|🌆|Shibuya Sky|Observatiedek met rooftop-uitzicht, ideaal bij zonsondergang.|4.6|Top uitzicht; boek een tijdslot.|28309
-Tokio|A|🎆|teamLab Planets|Immersieve digitale kunst waarbij je op blote voeten door water loopt.|4.5|Onvergetelijk; tickets raken uitverkocht.|58962
-Tokio|A|🌿|Ghibli Museum|Magisch museum van Studio Ghibli in Mitaka.|4.5|Prachtig voor fans; tickets vooraf, geen foto’s binnen.|20418
-Tokio|A|🏮|Golden Gai & Omoide Yokocho|Smalle steegjes vol piepkleine bars en yakitori.|4.3|Sfeervol, maar let op cover charge en hoge prijzen in sommige bars.|13274
-Tokio|A|🗻|Chureito-pagode & Mount Fuji|Dagtrip: rode pagode met de Fuji erachter, populair voor foto’s.|4.7|Postkaartzicht; zeer druk, ga vroeg; 398 treden omhoog.|6479
-Tokio|R|🍣|Tsukiji Outer Market|Verse sushi, tamagoyaki en streetfood bij de oude vismarkt.|4.2|Lekker, maar druk en toeristisch.|56429
-Tokio|R|🍱|Sushi Dai / Daiwa (Toyosu)|Sushi in de buurt van de nieuwe vismarkt.|4.5|Topomakase; vroeg opstaan en lange rij; woensdag en zondag dicht.|1929
-Tokio|R|🍜|Fuunji (tsukemen)|Beroemde dipnoedels in rijke vis-kippenbouillon.|4.3|Intens en vol; rij is gebruikelijk.|5811
-Tokio|R|🍤|Maisen (tonkatsu)|Gepaneerde varkenshaas, zacht en knapperig.|4.4|Consistent goed en betaalbaar.|5297
-Okinawa|A|🦈|Churaumi Aquarium|Beroemd aquarium met walvishaaien en manta’s.|4.6|Indrukwekkend; leuk voor alle leeftijden.|74926
-Okinawa|A|🐢|Kerama-eilanden (snorkelen)|Dagtrip met kristalhelder water en zeeschildpadden.||Geen betrouwbare Google-score (tourbedrijven); weersafhankelijk.|0
-Okinawa|A|🌅|Cape Manzamo & Kouri-eiland|Kliffen, uitzicht en de brug naar Kouri.|4.2|Mooi voor foto’s; auto handig.|24361
-Okinawa|A|🏯|Shuri Castle|Koninklijk paleis van het Ryukyu-koninkrijk, na brand in herstel.|4.2|Herbouw na de brand van 2019 loopt nog; mooi uitzicht en terreinen.|34623
-Okinawa|R|🍜|Okinawa soba (Kishimoto Shokudo)|Dikke tarwenoedels in lichte varkensbouillon met rafute.|4.1|Alleen cash, vaak een rij; soba en gebakken rijst, soms uitverkocht.|2383
-Okinawa|R|🛍️|Makishi Market & Kokusai-dori|Lokale markt met vis en varkensvlees plus winkelstraat in Naha.|4.1|Leuk voor lokale smaken en souvenirs.|3331
-Okinawa|R|🥩|Jack’s Steak House|Lokale steakklassieker in Naha, met vaak een flinke rij.|4.2|Lokale klassieker; wachttijd 50 min of meer, zacht vlees.|11151`;
-const I=RAW.split('\n').map((l,n)=>{const[c,t,e,nm,d,r,s,k]=l.split('|');return{n,c,t,e,nm,d,r,s,k}});
-const E=['👎','🤔','👍','😍'],L=['Nee','Misschien','Leuk','Must!'];
+const RAW=`Seoul|A|🏯|Gyeongbokgung-paleis|Grootste paleis van Seoul. Huur een hanbok (dan gratis toegang) en zie de wisseling van de wacht.|4.6|Prachtig en fotogeniek; ga vroeg voor de drukte.|47408|Metro 3 naar Gyeongbokgung; ca. 3 min wandelen.
+Seoul|A|🏘️|Bukchon Hanok Village|Heuvelwijk met traditionele Koreaanse huizen en uitzicht over de daken.|4.4|Charmant en fotogeniek, maar druk en heuvelachtig; sommigen vinden het kort.|24969|Metro 3 naar Anguk; ca. 10 min wandelen, bergop.
+Seoul|A|🗼|N Seoul Tower|Toren op Namsan met panorama over de stad, vooral mooi bij zonsondergang.|4.5|Topuitzicht; kabelbaan en rijen kunnen lang zijn.|69098|Metro 4 naar Myeongdong; dan ca. 20 min bergop wandelen of met kabelbaan/bus 02.
+Seoul|A|♨️|Dragon Hill Spa (jjimjilbang)|Koreaans badhuis met sauna’s, hete baden en rustzalen, tot laat open.|3.7|Leuk en ontspannend; wennen aan naaktbaden en extra kosten (handdoek, laden).|4603|Metro 1 naar Yongsan; ca. 10 min wandelen.
+Seoul|A|🪖|DMZ-tour|Dagtrip naar de gedemilitariseerde zone: tunnel, uitkijkpost en grensdorp.||Tourscore niet te bepalen (hangt van organisator af); vooraf boeken.|0|Georganiseerde tour met bus vanaf Seoul (o.a. Myeongdong/Hongdae); ca. 1,5-2 u rijden.
+Seoul|A|🌇|Han-rivier picknick (Banpo)|Picknick aan de rivier met bezorgde fried chicken en ramyun uit de gemakswinkel.|4.4|Fijne picknicksfeer; de regenboogfontein draait seizoensgebonden (tot eind oktober).|7993|Metro 3/7/9 naar Express Bus Terminal; ca. 10 min wandelen naar het park.
+Seoul|A|🏙️|Lotte World Tower – Seoul Sky|Observatiedek op de 117e verdieping van een van de hoogste torens ter wereld.|4.6|Spectaculair uitzicht; reserveer een tijdslot.|6718|Metro 2/8 naar Jamsil; ca. 3 min wandelen (verbonden met het winkelcentrum).
+Seoul|R|🥘|Gwangjang Market|Streetfoodmarkt met bindaetteok, mayak gimbap en rauwe rundertartaar.|4.2|Levendig en authentiek; weinig variatie en veel varkensvet.|44496|Metro 1 naar Jongno 5-ga; ca. 3 min wandelen.
+Seoul|R|🍜|Myeongdong Kyoja|Handgesneden kalguksu-noedels en mandu in een eenvoudige zaak.|4.2|Snel en simpel; meningen verdeeld, sommigen vinden het mild en overhyped.|15110|Metro 4 naar Myeongdong; ca. 5 min wandelen.
+Seoul|R|🍲|Tosokchon Samgyetang|Ginseng-kippensoep vlak bij Gyeongbokgung.|4.2|Warm en voedzaam; toeristisch maar consequent goed.|12223|Metro 3 naar Gyeongbokgung; ca. 8-10 min wandelen.
+Seoul|R|🥩|Maple Tree House (Itaewon)|Koreaanse BBQ: galbi en samgyeopsal aan tafel gegrild.|4.3|Goed vlees en service; prijzig voor Korea.|1397|Metro 6 naar Itaewon; ca. 8 min wandelen.
+Busan|A|🎨|Gamcheon Culture Village|Kleurrijk heuveldorp vol street art, soms “Santorini van Korea” genoemd.|4.4|Leuk om te dwalen; drukker in het weekend.|33957|Metro 1 naar Toseong, dan dorpsbus 2 of 2-2 (ca. 15 min); in het dorp veel trappen.
+Busan|A|🌊|Haedong Yonggungsa|Boeddhistische tempel op een klif aan zee.|4.5|Een van de mooiste tempels; ga vroeg.|28304|Metro 2 naar Haeundae, dan bus 181 (ca. 40 min); laatste stuk ca. 10 min wandelen.
+Busan|A|🌉|Gwangalli Beach bij avond|Strand met verlicht uitzicht op de Gwangan-brug en terrassen langs het water.|4.7|Gezellige sfeer en mooie lichten.|1783|Metro 2 naar Gwangan; ca. 10 min wandelen naar het strand.
+Busan|R|🐟|Jagalchi Fish Market|Grootste vismarkt van Korea: kies je vis en eet hem boven ter plekke.|4.0|Beleving, maar let op de prijzen en vraag vooraf.|27622|Metro 1 naar Jagalchi; ca. 3 min wandelen.
+Busan|R|🔥|Haeundae Amso Galbijip|Beroemd voor galbi (gemarineerde ribbetjes), gegrild aan tafel.|3.9|Topvlees (Michelin) maar duur; lange wachttijd en daarom lagere score.|3829|Metro 2 naar Haeundae; ca. 10 min wandelen.
+Hiroshima|A|🕊️|Peace Memorial Park & Museum|A-Bomb Dome, vredesmuseum en monument voor de kinderen. Plan 2-3 uur.|4.6|Aangrijpend; kan erg druk zijn met schoolgroepen, ga vroeg of laat.|31509|Tram 2 of 6 naar Genbaku-Dome-mae; ca. 5 min wandelen (tram vanaf station ca. 15 min).
+Hiroshima|A|⛩️|Miyajima – drijvende torii|Eiland met de torii in zee, herten, tempels en kabelbaan naar Mount Misen.|4.6|Magisch bij hoogwater; combineer met oesters.|37386|JR-trein naar Miyajimaguchi (ca. 30 min), dan veerboot 10 min en ca. 10-15 min wandelen.
+Hiroshima|R|🥞|Okonomimura|Gebouw met vier verdiepingen okonomiyaki-kraampjes (Hiroshima-stijl met noedels).|4.3|Gezellig en lokaal; keuze maken is lastig.|9253|Tram naar Hondori of Hatchobori; ca. 5 min wandelen.
+Hiroshima|R|🦪|Yakigaki no Hayashi (oesters, Miyajima)|Hiroshima is de oesterhoofdstad: vers gegrild of gefrituurd.|4.3|Verse oesters, makkelijk bestellen via tablet; woensdag/donderdag soms dicht.|2110|Op Miyajima; ca. 5 min wandelen van de veerbootaanlegplaats.
+Kyoto|A|⛩️|Fushimi Inari-taisha|Duizenden rode torii-poorten langs een bergpad.|4.6|Ga bij zonsopgang of laat in de avond voor rust.|94365|JR Nara-lijn naar Inari (ca. 5 min vanaf Kyoto Station); station ligt bij de ingang.
+Kyoto|A|🎋|Arashiyama bamboebos|Bamboepad, Tenryu-ji, apenpark en rivier met bootjes.|4.3|Mooi maar korter en drukker dan verwacht; vroeg gaan.|27080|JR Sagano-lijn naar Saga-Arashiyama (ca. 15 min); ca. 10-15 min wandelen naar het bamboebos.
+Kyoto|A|🏯|Kiyomizu-dera|Houten tempel op een berg met uitzicht en de oude straatjes van Higashiyama.|4.6|Prachtig, vooral in herfst; toeristisch.|74972|Bus 100 of 206 vanaf Kyoto Station naar Gojo-zaka; ca. 10-15 min wandelen bergop.
+Kyoto|A|✨|Kinkaku-ji (Gouden Paviljoen)|Zenpaviljoen bedekt met bladgoud, weerspiegeld in een vijver.|4.6|Iconisch maar kort en druk; sommigen vinden het vooral een toeristische stop.|72384|Bus 101 of 205 vanaf Kyoto Station (ca. 40 min); ca. 3 min wandelen.
+Kyoto|A|👘|Gion avondwandeling|Historisch geishadistrict; kans op maiko in de late namiddag.||Wijk, geen Google-score; sfeervol bij schemering.|0|Keihan-lijn naar Gion-Shijo; ca. 5 min wandelen.
+Kyoto|A|🦌|Nara – Todai-ji & herten|Dagtrip: Grote Boeddha en tamme herten in het park.|4.7|Leuk en makkelijk te combineren met Kyoto.|32976|Trein vanaf Kyoto naar Nara (JR of Kintetsu, ca. 45 min); ca. 20-25 min wandelen door het park.
+Kyoto|R|🍡|Nishiki Market|Overdekte markt met tamagoyaki, ingelegde groenten en spiesjes.|4.3|Leuk om te proeven; druk, niet overal kun je lopend eten.|55921|Metro of Hankyu naar Shijo/Karasuma; ca. 3-5 min wandelen.
+Kyoto|R|🍜|Kyoto Gogyo|Beroemd voor zwartgebrande miso-ramen met rokerige smaak.||Geen betrouwbare Google-score gevonden.|0|Centraal Kyoto bij Karasuma/Shijo; controleer de exacte locatie in Maps.
+Kyoto|R|🍵|Nakamura Tokichi (Uji)|Matcha-desserts en thee bij de bron in Uji.|4.4|Heerlijke matcha-parfait, maar wachttijd tot 2 uur (QR-wachtrij).|5619|JR Nara-lijn naar Uji (ca. 20 min); ca. 5 min wandelen.
+Osaka|A|🌃|Dotonbori|Neonlichten, Glico-man en eten langs het kanaal.||Wijk, geen Google-score; neon en eten, druk en chaotisch.|0|Metro naar Namba; ca. 5 min wandelen.
+Osaka|A|🏯|Osaka Castle|Kasteel met museum en uitzicht, omringd door een park.|4.4|Mooi vanbuiten; binnenin vooral museum.|103452|JR-lus of metro naar Osakajokoen/Morinomiya; ca. 10-15 min wandelen door het park.
+Osaka|A|🎢|Universal Studios Japan|Pretpark met Super Nintendo World en Harry Potter.|4.5|Fantastisch maar druk; koop vooraf tickets.|158064|JR Yumesaki-lijn naar Universal City (ca. 15 min vanaf Osaka Station); ca. 5 min wandelen.
+Osaka|A|🏰|Himeji Castle|“Witte reiger”-kasteel; dagtrip van ca. 45 min met de sneltrein.|4.6|Mooiste kasteel van Japan volgens velen.|61260|Trein naar Himeji (ca. 45 min-1 u vanaf Osaka); ca. 15 min wandelen naar het kasteel.
+Osaka|R|🐙|Takoyaki (Wanaka/Aizuya)|Knapperige octopusballetjes, uitgevonden in Osaka.|4.2|Goedkoop en heet; wees voorzichtig met de eerste hap.|1754|Metro naar Namba; ca. 5 min wandelen (Dotonbori).
+Osaka|R|🥞|Okonomiyaki Mizuno|Michelin Bib Gourmand-okonomiyaki in Dotonbori.|3.8|Legendarisch en Michelin-vermeld, maar meningen verdeeld; kleine zaak met rij.|3322|Metro naar Namba; ca. 5 min wandelen (Dotonbori).
+Osaka|R|🍢|Kushikatsu Daruma (Shinsekai)|Gefrituurde spiesjes; niet twee keer dippen in de saus.|4.1|Gezellig, wat vettig, sfeervol.|2196|Metro naar Ebisucho of Dobutsuen-mae; ca. 3-5 min wandelen.
+Tokio|A|⛩️|Senso-ji (Asakusa)|Oudste tempel van Tokio met Kaminarimon en winkelstraat.|4.6|Sfeervol, maar druk; mooi ’s avonds.|102093|Metro Ginza-lijn naar Asakusa; ca. 5 min wandelen.
+Tokio|A|🌲|Meiji Jingu|Rustige schrijn in een bos in het hart van de stad.|4.7|Verfrissend na de drukte.|54976|JR Yamanote naar Harajuku; ca. 1 min tot de ingang.
+Tokio|A|🌆|Shibuya Sky|Observatiedek met rooftop-uitzicht, ideaal bij zonsondergang.|4.6|Top uitzicht; boek een tijdslot.|28309|JR of metro naar Shibuya; ca. 3 min (verbonden met station).
+Tokio|A|🎆|teamLab Planets|Immersieve digitale kunst waarbij je op blote voeten door water loopt.|4.5|Onvergetelijk; tickets raken uitverkocht.|58962|Yurikamome naar Shin-Toyosu; ca. 1-5 min wandelen.
+Tokio|A|🌿|Ghibli Museum|Magisch museum van Studio Ghibli in Mitaka.|4.5|Prachtig voor fans; tickets vooraf, geen foto’s binnen.|20418|JR Chuo-lijn naar Mitaka, dan ca. 15 min wandelen of Ghibli-bus.
+Tokio|A|🏮|Golden Gai & Omoide Yokocho|Smalle steegjes vol piepkleine bars en yakitori.|4.3|Sfeervol, maar let op cover charge en hoge prijzen in sommige bars.|13274|JR naar Shinjuku (oostzijde); ca. 10 min wandelen.
+Tokio|A|🗻|Chureito-pagode & Mount Fuji|Dagtrip: rode pagode met de Fuji erachter, populair voor foto’s.|4.7|Postkaartzicht; zeer druk, ga vroeg; 398 treden omhoog.|6479|Trein naar Shimo-Yoshida (ca. 2-2,5 u vanaf Tokio); ca. 15 min wandelen plus 398 treden.
+Tokio|R|🍣|Tsukiji Outer Market|Verse sushi, tamagoyaki en streetfood bij de oude vismarkt.|4.2|Lekker, maar druk en toeristisch.|56429|Metro naar Tsukiji; ca. 3 min wandelen.
+Tokio|R|🍱|Sushi Dai / Daiwa (Toyosu)|Sushi in de buurt van de nieuwe vismarkt.|4.5|Topomakase; vroeg opstaan en lange rij; woensdag en zondag dicht.|1929|Yurikamome naar Shijo-mae; ca. 1-5 min wandelen.
+Tokio|R|🍜|Fuunji (tsukemen)|Beroemde dipnoedels in rijke vis-kippenbouillon.|4.3|Intens en vol; rij is gebruikelijk.|5811|JR naar Shinjuku (zuidzijde); ca. 5 min wandelen.
+Tokio|R|🍤|Maisen (tonkatsu)|Gepaneerde varkenshaas, zacht en knapperig.|4.4|Consistent goed en betaalbaar.|5297|Metro naar Omotesando; ca. 5 min wandelen.
+Okinawa|A|🦈|Churaumi Aquarium|Beroemd aquarium met walvishaaien en manta’s.|4.6|Indrukwekkend; leuk voor alle leeftijden.|74926|Vanaf Naha ca. 1,5 u met huurauto; snelbus ca. 2 u; parkgebied is groot, ca. 10 min wandelen.
+Okinawa|A|🐢|Kerama-eilanden (snorkelen)|Dagtrip met kristalhelder water en zeeschildpadden.||Geen betrouwbare Google-score (tourbedrijven); weersafhankelijk.|0|Veerboot vanaf Tomari Port in Naha (ca. 50 min snelboot); haven ca. 10 min van monorail Asahibashi.
+Okinawa|A|🌅|Cape Manzamo & Kouri-eiland|Kliffen, uitzicht en de brug naar Kouri.|4.2|Mooi voor foto’s; auto handig.|24361|Geen goed openbaar vervoer; huurauto ca. 1 u vanaf Naha, dan ca. 5 min wandelen.
+Okinawa|A|🏯|Shuri Castle|Koninklijk paleis van het Ryukyu-koninkrijk, na brand in herstel.|4.2|Herbouw na de brand van 2019 loopt nog; mooi uitzicht en terreinen.|34623|Monorail (Yui Rail) naar Shuri (ca. 25 min vanaf luchthaven); ca. 15 min wandelen.
+Okinawa|R|🍜|Okinawa soba (Kishimoto Shokudo)|Dikke tarwenoedels in lichte varkensbouillon met rafute.|4.1|Alleen cash, vaak een rij; soba en gebakken rijst, soms uitverkocht.|2383|Alleen met auto of taxi (ca. 1,5 u vanaf Naha), vlakbij Churaumi.
+Okinawa|R|🛍️|Makishi Market & Kokusai-dori|Lokale markt met vis en varkensvlees plus winkelstraat in Naha.|4.1|Leuk voor lokale smaken en souvenirs.|3331|Monorail naar Makishi; ca. 5 min wandelen.
+Okinawa|R|🥩|Jack’s Steak House|Lokale steakklassieker in Naha, met vaak een flinke rij.|4.2|Lokale klassieker; wachttijd 50 min of meer, zacht vlees.|11151|Monorail naar Asahibashi of Miebashi; ca. 10 min wandelen.`;
+const I=RAW.split('\n').map((l,n)=>{const[c,t,e,nm,d,r,s,k,v]=l.split('|');return{n,c,t,e,nm,d,r,s,k,v}});
+const E=['👎','🤔','👍','😍'],L=['Nee','Misschien','Leuk','Must!'],N={A:'Annelies',H:'Henri'};
 const G={A:'linear-gradient(135deg,#f59e0b,#db2777)',R:'linear-gradient(135deg,#10b981,#0284c7)'};
 const $=q=>document.querySelector(q),enc=encodeURIComponent;
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const q=[...I].sort(()=>Math.random()-.5);
-let view='s',mine={},others={},names={},db=null,me=null,chain=Promise.resolve(),hist=[],fc='',ft='',first=true;
-try{mine=JSON.parse(localStorage.getItem('kj')||'{}')}catch(e){}
-function save(){try{localStorage.setItem('kj',JSON.stringify(mine))}catch(e){}
- if(db&&me){const v={...mine};chain=chain.then(()=>db.doc('r/'+me).set({v})).catch(()=>{})}}
-function cur(){return q.find(i=>!(i.n in mine))}
-function rate(s){const it=cur();if(!it)return;mine[it.n]=s;hist.push(it.n);save();render()}
-function undo(){const n=hist.pop();if(n==null)return;delete mine[n];save();render()}
-function go(v){view=v;render()}
-function setF(){fc=$('#fc').value;ft=$('#ft').value;render()}
-function swipe(){
- const done=Object.keys(mine).length,it=cur();
- const bar=`<div class="pg"><i style="width:${done/I.length*100}%"></i></div><p class="m">${done} / ${I.length} beoordeeld</p>`;
- const ub=`<button class="u" onclick="undo()" ${hist.length?'':'disabled'}>↩ Terug</button>`;
- if(!it)return bar+`<div class="card"><div class="b"><h2>Klaar! 🎉</h2><p>Alles is beoordeeld. Open het tabblad Resultaten om te plannen.</p></div></div><p>${ub}</p>`;
- return bar+cardH(it,false)+
- `<div class="btns">${E.map((e,s)=>`<button onclick="rate(${s})"><b>${e}</b>${L[s]}</button>`).join('')}</div>${ub}`;
-}
-function cardH(it,city){const k=enc(it.nm+' '+it.c),sc=city&&it.n in mine?' · jij: '+E[mine[it.n]]:'';
- return `<div class="card"><div class="ph" id="ph" style="background:${G[it.t]}">${it.e}</div><div class="b"><div class="tag">${city?it.c+' · ':''}${it.t=='A'?'Activiteit':'Restaurant'} · ${it.r?`★ ${it.r} Google <small>(${(+it.k).toLocaleString('nl-BE')} reviews, 23 nov 2026)</small>`:'<small>Geen Google-score</small>'}${sc}</div><h2>${esc(it.nm)}</h2><p>${esc(it.d)}</p><p class="s"><b>Bezoekers zeggen:</b> ${esc(it.s)}</p><div class="lk"><a target="_blank" rel="noopener" href="https://www.google.com/search?tbm=isch&q=${k}">📷 Foto’s</a><a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${k}">📍 Google Maps</a></div></div></div>`}
-let bi=0,bc='',bt='',shown=null,myName='';try{myName=localStorage.getItem('kjn')||''}catch(e){}
-function list(){return I.filter(i=>(!bc||i.c==bc)&&(!bt||i.t==bt))}
-function nav(d){const n=list().length;if(n){bi=(bi+d+n)%n;render()}}
-function setB(){bc=$('#bc').value;bt=$('#bt').value;bi=0;render()}
-function browse(){const l=list();if(bi>=l.length)bi=0;const it=l[bi];shown=it;const cs=[...new Set(I.map(i=>i.c))];
- const sel=`<select id="bc" onchange="setB()"><option value="">Alle steden</option>${cs.map(c=>`<option ${c==bc?'selected':''}>${c}</option>`).join('')}</select><select id="bt" onchange="setB()"><option value="">Alles</option><option value="A" ${bt=='A'?'selected':''}>Activiteiten</option><option value="R" ${bt=='R'?'selected':''}>Restaurants</option></select>`;
- if(!it)return sel+'<p class="m">Geen items.</p>';
- return sel+`<p class="m">${bi+1} / ${l.length} · alleen bekijken, niets wordt beoordeeld</p>`+cardH(it,true)+`<div class="btns" style="grid-template-columns:1fr 1fr"><button onclick="nav(-1)">← Vorige</button><button onclick="nav(1)">Volgende →</button></div>`}
-function rows(){const ids=Object.keys(others);
- return{ids,r:I.filter(i=>(i.n in mine||ids.some(u=>i.n in others[u]))&&(!fc||i.c==fc)&&(!ft||i.t==ft)).map(i=>{const sc=[mine[i.n],...ids.map(u=>others[u][i.n])];return{i,sc,tot:sc.reduce((a,b)=>a+(b??0),0)}}).sort((a,b)=>b.tot-a.tot||b.i.r-a.i.r)}}
-function res(){const{ids,r}=rows();const cs=[...new Set(I.map(i=>i.c))];
- const sel=`<select id="fc" onchange="setF()"><option value="">Alle steden</option>${cs.map(c=>`<option ${c==fc?'selected':''}>${c}</option>`).join('')}</select><select id="ft" onchange="setF()"><option value="">Alles</option><option value="A" ${ft=='A'?'selected':''}>Activiteiten</option><option value="R" ${ft=='R'?'selected':''}>Restaurants</option></select><button class="dl" onclick="dl()">⬇ CSV</button>`;
- const h=`<th>Item</th><th>${esc(myName||'Jij')}</th>${ids.map(u=>`<th>${esc((names[u]&&names[u].name)||'Partner')}</th>`).join('')}<th>Totaal</th>`;
- const b=r.map(({i,sc,tot})=>`<tr><td>${i.e} <b>${esc(i.nm)}</b><br><small>${i.c} · ${i.t=='A'?'Activiteit':'Restaurant'} · ${i.r?'★'+i.r:'–'}</small></td>${sc.map(s=>`<td>${s==null?'–':E[s]}</td>`).join('')}<td><b>${tot}</b></td></tr>`).join('');
- return sel+`<p class="m">Jouw naam: <input id="nm" value="${esc(myName)}" onchange="setN()" style="width:45%"></p><p class="m">Jouw code: <b id="cc">${code()}</b> <button class="dl" onclick="cp()">Kopieer</button></p><p><input id="pc" placeholder="Plak de code van je partner"> <button class="dl" onclick="setP()">OK</button></p>`+`<div class="tw"><table><tr>${h}</tr>${b||'<tr><td colspan="9">Nog niets beoordeeld.</td></tr>'}</table></div>`}
-async function dl(){const{ids,r}=rows();
- const csv=['stad,type,naam,google,jij'+ids.map((u,k)=>',partner'+(k+1)).join('')+',totaal',...r.map(({i,sc,tot})=>[i.c,i.t=='A'?'activiteit':'restaurant','"'+i.nm+'"',i.r,...sc.map(s=>s==null?'':L[s]),tot].join(','))].join('\n');
- const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='korea-japan-scores.csv';a.click()}
+const sh=a=>[...a].sort(()=>Math.random()-.5);
+const D={a:sh(I.filter(i=>i.t=='A')),r:sh(I.filter(i=>i.t=='R'))},P={a:0,r:0},PC={};
+let S={A:{},H:{}},who='',view='a',fc='',ft='',shown=null;
+try{const s=JSON.parse(localStorage.getItem('kj2')||'null');if(s)S=s;who=localStorage.getItem('kjw')||''}catch(e){}
 const W={0:'Gyeongbokgung',1:'Bukchon_Hanok_Village',2:'N_Seoul_Tower',4:'Korean_Demilitarized_Zone',5:'Banpo_Bridge',6:'Lotte_World_Tower',7:'Gwangjang_Market',11:'Gamcheon_Culture_Village',12:'Haedong_Yonggungsa',13:'Gwangalli_Beach',14:'Jagalchi_Market',16:'Hiroshima_Peace_Memorial_Museum',17:'Itsukushima_Shrine',20:'Fushimi_Inari-taisha',21:'Arashiyama',22:'Kiyomizu-dera',23:'Kinkaku-ji',24:'Gion,_Kyoto',25:'Tōdai-ji',26:'Nishiki_Market',29:'Dōtonbori',30:'Osaka_Castle',31:'Universal_Studios_Japan',32:'Himeji_Castle',33:'Takoyaki',34:'Okonomiyaki',35:'Kushikatsu',36:'Sensō-ji',37:'Meiji_Shrine',38:'Shibuya_Scramble_Square',39:'TeamLab_Planets',40:'Ghibli_Museum',41:'Golden_Gai',42:'Chureito_Pagoda',43:'Tsukiji_fish_market',44:'Sushi',45:'Tsukemen',46:'Tonkatsu',47:'Okinawa_Churaumi_Aquarium',48:'Kerama_Islands',49:'Cape_Manzamo',50:'Shuri_Castle',51:'Okinawa_soba'};
-const PC={};
-async function photo(it){const t=W[it.n];if(!t)return;try{let j=PC[t];if(!j){const r=await fetch('https://en.wikipedia.org/api/rest_v1/page/summary/'+encodeURIComponent(t));if(!r.ok)return;j=PC[t]=await r.json()}
- const s=j.thumbnail&&j.thumbnail.source;const el=$('#ph');if(!s||!el||shown!==it)return;
+function save(){try{localStorage.setItem('kj2',JSON.stringify(S))}catch(e){}}
+const ex=o=>I.map(i=>i.n in o?o[i.n]:'-').join('');
+function imp(){const p=new URLSearchParams(location.hash.slice(1));let ch=false;for(const w of['A','H']){const v=p.get(w);if(v&&v.length==I.length&&/^[0-3-]+$/.test(v)){[...v].forEach((c,n)=>{if(c!='-')S[w][n]=+c});ch=true}}if(ch){save();history.replaceState(null,'',location.pathname)}}
+function go(v){view=v;render()}
+function setWho(w){who=w;try{localStorage.setItem('kjw',w)}catch(e){}render()}
+function rate(s){const it=D[view][P[view]];if(!it||!who)return;S[who][it.n]=s;save();step(1,true)}
+function step(dir,skip){const d=D[view],n=d.length;for(let k=1;k<=n;k++){const c=(((P[view]+dir*k)%n)+n)%n;if(!skip||!(d[c].n in S[who])){P[view]=c;break}}render()}
+async function photo(it){const t=W[it.n];if(!t)return;try{let j=PC[t];if(!j){const r=await fetch('https://en.wikipedia.org/api/rest_v1/page/summary/'+enc(t));if(!r.ok)return;j=PC[t]=await r.json()}
+ const s=j.thumbnail&&j.thumbnail.source,el=$('#ph');if(!s||!el||shown!==it)return;
  el.innerHTML='<img src="'+s.replace(/\/\d+px-/,'/960px-')+'" alt="" style="width:100%;height:100%;object-fit:cover" onerror="this.remove()"><a class="cr" target="_blank" rel="noopener" href="'+j.content_urls.desktop.page+'">Foto: Wikipedia</a>'}catch(e){}}
-function code(){return (myName?myName.replace(/~/g,'')+'~':'')+I.map(i=>i.n in mine?mine[i.n]:'-').join('')}
-function setN(){myName=$('#nm').value.trim();try{localStorage.setItem('kjn',myName)}catch(e){}$('#cc').textContent=code()}
-function cp(){const c=code();try{navigator.clipboard.writeText(c)}catch(e){}$('#cc').textContent=c}
-function setP(){const raw=$('#pc').value.trim(),i=raw.lastIndexOf('~'),v=raw.slice(i+1),nm=i>0?raw.slice(0,i):'';if(v.length==I.length&&/^[0-3-]+$/.test(v)){try{localStorage.setItem('kjp',v);localStorage.setItem('kjpn',nm)}catch(e){}loadP();render()}else alert('Ongeldige code')}
-function loadP(){let v='',nm='';try{v=localStorage.getItem('kjp')||'';nm=localStorage.getItem('kjpn')||''}catch(e){}if(v.length==I.length){const o={};[...v].forEach((c,n)=>{if(c!='-')o[n]=+c});others={p:o};names={p:{name:nm||'Partner'}}}}
-function render(){$('#t1').className=view=='s'?'on':'';$('#t2').className=view=='r'?'on':'';$('#t3').className=view=='b'?'on':'';$('#app').innerHTML=view=='s'?swipe():view=='b'?browse():res();if(view!='r'){const it=view=='s'?cur():shown;if(it){shown=it;photo(it);const nx=q.filter(i=>!(i.n in mine))[1];if(nx&&W[nx.n])fetch('https://en.wikipedia.org/api/rest_v1/page/summary/'+encodeURIComponent(W[nx.n])).then(r=>r.ok?r.json():0).then(j=>{if(j)PC[W[nx.n]]=j}).catch(()=>{})}}}
-loadP();render();
-document.addEventListener('keydown',e=>{if(view=='s'&&e.key>='1'&&e.key<='4')rate(+e.key-1);if(view=='b'){if(e.key=='ArrowRight')nav(1);if(e.key=='ArrowLeft')nav(-1)}});
+function cardH(it){const k=enc(it.nm+' '+it.c);
+ return `<div class="card"><div class="ph" id="ph" style="background:${G[it.t]}">${it.e}</div><div class="b"><div class="tag">${it.t=='A'?'Activiteit':'Restaurant'} · ${it.r?`★ ${it.r} Google <small>(${(+it.k).toLocaleString('nl-BE')} reviews, 23 nov 2026)</small>`:'<small>Geen Google-score</small>'}</div><h2>${esc(it.nm)}</h2><p>${esc(it.d)}</p><p class="s"><b>Bezoekers zeggen:</b> ${esc(it.s)}</p><p class="s v">🚇 <b>Hoe er te komen:</b> ${esc(it.v)} <small>(indicatief)</small></p><div class="lk"><a target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination=${k}&travelmode=transit">🚇 Route met OV</a><a target="_blank" rel="noopener" href="https://www.google.com/search?tbm=isch&q=${k}">📷 Foto’s</a><a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${k}">📍 Maps</a></div></div></div>`}
+function deck(){const d=D[view],it=d[P[view]],m=S[who],done=d.filter(i=>i.n in m).length,cur=m[it.n];shown=it;
+ return `<div class="pg"><i style="width:${done/d.length*100}%"></i></div><p class="m">${done} / ${d.length} beoordeeld · kaart ${P[view]+1}</p>${done==d.length?'<p class="m">🎉 Alles beoordeeld. Je kunt nog bladeren en scores aanpassen.</p>':''}`+cardH(it)+`<div class="btns">${E.map((e,s)=>`<button class="${cur===s?'on':''}" onclick="rate(${s})"><b>${e}</b>${L[s]}</button>`).join('')}</div><div class="btns" style="grid-template-columns:1fr 1fr"><button onclick="step(-1,false)">← Vorige</button><button onclick="step(1,false)">Volgende →</button></div>`}
+function rows(){return I.filter(i=>(i.n in S.A||i.n in S.H)&&(!fc||i.c==fc)&&(!ft||i.t==ft)).map(i=>({i,a:S.A[i.n],h:S.H[i.n],tot:(S.A[i.n]??0)+(S.H[i.n]??0)})).sort((x,y)=>y.tot-x.tot||(+y.i.r||0)-(+x.i.r||0))}
+function setF(){fc=$('#fc').value;ft=$('#ft').value;render()}
+const link=()=>location.origin+location.pathname+'#A='+ex(S.A)+'&H='+ex(S.H);
+function cp(){const u=link();$('#lk').value=u;try{navigator.clipboard.writeText(u)}catch(e){}$('#lk').select()}
+function res(){const cs=[...new Set(I.map(i=>i.c))],r=rows();
+ const sel=`<select id="fc" onchange="setF()"><option value="">Alle steden</option>${cs.map(c=>`<option ${c==fc?'selected':''}>${c}</option>`).join('')}</select><select id="ft" onchange="setF()"><option value="">Alles</option><option value="A" ${ft=='A'?'selected':''}>Activiteiten</option><option value="R" ${ft=='R'?'selected':''}>Restaurants</option></select><button class="dl" onclick="dl()">⬇ CSV</button>`;
+ const b=r.map(({i,a,h,tot})=>`<tr><td>${i.e} <b>${esc(i.nm)}</b><br><small>${i.c} · ${i.t=='A'?'Activiteit':'Restaurant'} · ${i.r?'★'+i.r:'–'}</small></td><td>${a==null?'–':E[a]}</td><td>${h==null?'–':E[h]}</td><td><b>${tot}</b></td></tr>`).join('');
+ return `<p class="m"><b>Delen tussen browsers:</b> klik op de knop, open de link in de andere browser en alles wordt samengevoegd. <button class="dl" onclick="cp()">Kopieer link</button></p><p><input id="lk" readonly placeholder="Hier verschijnt de link" style="width:95%"></p>`+sel+`<div class="tw"><table><tr><th>Item</th><th>${N.A}</th><th>${N.H}</th><th>Totaal</th></tr>${b||'<tr><td colspan="4">Nog niets beoordeeld.</td></tr>'}</table></div>`}
+function dl(){const csv=['stad,type,naam,google,annelies,henri,totaal',...rows().map(({i,a,h,tot})=>[i.c,i.t=='A'?'activiteit':'restaurant','"'+i.nm+'"',i.r,a==null?'':L[a],h==null?'':L[h],tot].join(','))].join('\n');
+ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='korea-japan-scores.csv';a.click()}
+function render(){['a','r','z'].forEach(v=>$('#t'+v).className=view==v?'on':'');['A','H'].forEach(w=>$('#w'+w).className=who==w?'on':'');
+ $('#app').innerHTML=view=='z'?res():!who?'<p class="m">Kies bovenaan wie je bent (Annelies of Henri) om te beginnen.</p>':deck();
+ if(view!='z'&&who&&shown)photo(shown)}
+document.addEventListener('keydown',e=>{if(view=='z'||!who||/INPUT|SELECT/.test(e.target.tagName))return;if(e.key>='1'&&e.key<='4')rate(+e.key-1);if(e.key=='ArrowRight')step(1,false);if(e.key=='ArrowLeft')step(-1,false)});
+imp();render();
 </script></body></html>
