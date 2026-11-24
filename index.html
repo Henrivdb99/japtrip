@@ -131,7 +131,7 @@ let U=[],S={A:{},H:{}},who='',view='a',fc='',shown=null,P=0,last='',busy=0;
 const dk=()=>[...D,...U],all=()=>[...I,...U];
 try{const s=JSON.parse(localStorage.getItem('kj3')||'null');if(s){S=s.S||S;U=s.U||[]}who=localStorage.getItem('kjw')||''}catch(e){}
 function lsave(){try{localStorage.setItem('kj3',JSON.stringify({S,U}))}catch(e){}}
-async function api(p,o={}){const r=await fetch(CFG.url+'/rest/v1/'+p,{...o,headers:{apikey:CFG.key,Authorization:'Bearer '+CFG.key,'Content-Type':'application/json',...(o.headers||{})}});if(!r.ok)throw new Error(r.status);const t=await r.text();return t?JSON.parse(t):null}
+async function api(p,o={}){const r=await fetch(CFG.url+'/rest/v1/'+p,{...o,headers:{apikey:CFG.key,...(CFG.key.startsWith('eyJ')?{Authorization:'Bearer '+CFG.key}:{}),'Content-Type':'application/json',...(o.headers||{})}});if(!r.ok)throw new Error(r.status);const t=await r.text();return t?JSON.parse(t):null}
 async function push(w,k,s){busy++;try{await api('scores?on_conflict=who,item',{method:'POST',headers:{Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify([{who:w,item:k,score:s}])})}catch(e){}busy--}
 const idea=x=>({n:'u'+x.id,c:x.city||'Anders',t:'A',e:'💡',nm:x.name,d:x.note||'',r:'',s:'Idee van '+(N[x.who]||'?'),k:'',v:'',w:'',link:x.link||'',u:1});
 async function pull(){if(!DBON||busy)return;try{const[sc,id]=await Promise.all([api('scores?select=who,item,score&limit=5000'),api('ideas?select=*&order=id&limit=1000')]);
